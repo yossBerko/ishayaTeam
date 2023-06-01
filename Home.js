@@ -2,6 +2,8 @@ import * as React from 'react';
 import {Button, View, Text} from 'react-native';
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
+import {app} from './App';
+import {initializeDataBase, writeUserData, getWorkers} from "./LoginAuth";
 
 export default function HomePage({route, navigation}) {
     const {itemId, otherParam} = route.params;
@@ -12,14 +14,15 @@ export default function HomePage({route, navigation}) {
             <Text>otherParam: {JSON.stringify(otherParam)}</Text>
             <Button
                 title="Go to HomePage"
-                onPress={() => navigation.pop('HomePage')}
+                onPress={() => getWorkers(app)}
             />
             <Button
                 title="Go to anteater Home"
                 onPress={() => navigation.push('HomePage', {
                     itemId: Math.floor(Math.random() * 100),
                     otherParam: 'anything you want here',
-                })}
+                })
+            }
             />
             <Button title="Go back" onPress={() => navigation.goBack()}/>
             <Button
