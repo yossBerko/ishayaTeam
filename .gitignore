@@ -20,6 +20,7 @@ eas.json
 _scripts/
 .expo
 media/
+exampels
 
 # will be generated after `expo run:ios` or `expo run:android`
 ios/
