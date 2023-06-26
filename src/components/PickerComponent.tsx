@@ -1,6 +1,6 @@
 import React from 'react';
 import {Colors, Picker} from 'react-native-ui-lib';
-import {changeTaskStatus} from "@app/services/api/realTimeDB";
+import {changeTaskStatus} from "@app/services/realTimeDB";
 
 const statusStyles = {
     'בהמתנה': {

@@ -7,7 +7,7 @@ import {NavioScreen} from 'rn-navio';
 
 import {services, useServices} from '@app/services';
 import {useAppearance} from '@app/utils/hooks';
-import {NavioSection} from '@app/components/sections/NavioSection';
+import {NavioSection} from './NavioSection';
 
 export type Params = {
   type?: 'push' | 'show';

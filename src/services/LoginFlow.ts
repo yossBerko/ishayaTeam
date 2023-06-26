@@ -1,5 +1,5 @@
-import {useStores} from "@app/stores/index";
-import {useServices} from "@app/services";
+import {useStores} from "@app/stores";
+import {useServices} from "@app/services/index";
 
 export const useShowAuthFlow = () => {
     const {auth} = useStores();

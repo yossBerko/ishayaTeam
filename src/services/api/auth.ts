@@ -1,11 +1,11 @@
-import {sleep} from '@app/utils/help';
+import {sleep} from '../../../exampels/help';
 import {Auth$Login$Response} from '@app/utils/types/api';
 import {getAuth, signInWithEmailAndPassword} from "firebase/auth";
 import {firebaseAuth} from "../../../firebaseConfig";
 import {useStores} from "@app/stores";
 import {ApiService} from "@app/services/api/index";
 import {AuthStore} from "@app/stores/auth";
-import {getUserDetails} from "@app/services/api/realTimeDB";
+import {getUserDetails} from "@app/services/realTimeDB";
 import {useState} from "react";
 
 

@@ -4583,6 +4583,7 @@ __metadata:
     react-native: ^0.71.8
     react-native-gesture-handler: ~2.9.0
     react-native-image-viewing: ^0.2.2
+    react-native-keyboard-accessory: ^0.1.16
     react-native-keyboard-aware-scroll-view: ^0.9.5
     react-native-lightbox: ^0.8.1
     react-native-reanimated: ~2.14.4
@@ -11989,6 +11990,17 @@ __metadata:
   peerDependencies:
     react-native: ">=0.42.0"
   checksum: 024376646009a966e33e12fc2358751830818b0fb73b1c601a64eb5e490d2dc43eec23668991b985a8c412a84d087f20eb45bb9b593567c08b66e741b7bddda5
+  languageName: node
+  linkType: hard
+
+"react-native-keyboard-accessory@npm:^0.1.16":
+  version: 0.1.16
+  resolution: "react-native-keyboard-accessory@npm:0.1.16"
+  peerDependencies:
+    prop-types: ">= 15"
+    react: ">= 16"
+    react-native: ">= 0.46"
+  checksum: fa10bb4e460a21adf0dfccab0597b47ff67f1cb466fae937dd73934c5ee193d2474246cd3ed7786bb1aabf5cb24d210f2f9add9ce4bf209dd03f2260c922d933
   languageName: node
   linkType: hard
 

@@ -2,7 +2,7 @@ import {Navio} from 'rn-navio';
 
 import {Messages} from '@app/screens/main';
 import {tasks} from '@app/screens/tasks';
-import {TimeClock} from '@app/screens/presence';
+import {TimeClock} from '@app/screens/TimeClock';
 import {Setting} from "@app/screens/Setting";
 
 import {useAppearance} from '@app/utils/hooks';

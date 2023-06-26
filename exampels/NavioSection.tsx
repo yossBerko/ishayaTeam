@@ -1,10 +1,10 @@
 import React from 'react';
 import {Text} from 'react-native-ui-lib';
-import {useServices} from '../../services';
-import {BButton} from '../button';
-import {Section} from '../section';
-import {randomNum} from '../../utils/help';
-import {Row} from '../row';
+import {useServices} from '@app/services';
+import {BButton} from '@app/components/button';
+import {Section} from '@app/components/section';
+import {randomNum} from './help';
+import {Row} from '@app/components/row';
 
 type Props = {};
 

@@ -4,7 +4,7 @@ import {Bounceable} from 'rn-bounceable';
 import {IconComponent, IconName} from "@app/components/icon";
 import {useNavigation} from '@react-navigation/native';
 import {DrawerNavigationProp} from '@react-navigation/drawer';
-import {useShowAuthFlow} from "@app/stores/LoginFlow";
+import {useShowAuthFlow} from "@app/services/LoginFlow";
 import {Row} from "@app/components/row";
 import {useStores} from "@app/stores";
 

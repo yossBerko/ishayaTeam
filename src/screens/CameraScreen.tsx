@@ -4,7 +4,7 @@ import {useEffect, useRef, useState} from "react";
 import {Camera, CameraType} from "expo-camera";
 import {Text, TouchableOpacity, View, Dialog, DialogDirections, Colors, Card} from 'react-native-ui-lib';
 import * as Permissions from 'expo-permissions';
-import {sendTaskMessage} from "@app/services/api/realTimeDB";
+import {sendTaskMessage} from "@app/services/realTimeDB";
 import {useNavigation, useRoute} from '@react-navigation/native';
 import {taskContent} from "@app/screens/tasks";
 import {useServices} from "@app/services";

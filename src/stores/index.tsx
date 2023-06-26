@@ -1,13 +1,13 @@
 import React from 'react';
 
-import './_hydration';
+import '../../exampels/_hydration';
 import {UIStore} from './ui';
-import {CounterStore} from './counter';
+import {CounterStore} from '../../exampels/counterStores';
 import {AuthStore} from './auth';
 
 class Stores {
   ui = new UIStore();
-  counter = new CounterStore();
+  //counter = new CounterStore();
   auth = new AuthStore();
 }
 export const stores = new Stores();

@@ -16,7 +16,7 @@ import {taskContent} from "@app/screens/tasks/index";
 import {ScrollView} from "react-native-gesture-handler";
 import {Row} from "@app/components/row";
 import {IconComponent} from "@app/components/icon";
-import {changeTaskStatus, listenToTask} from "@app/services/api/realTimeDB";
+import {changeTaskStatus, listenToTask} from "@app/services/realTimeDB";
 import {getDatabase, onValue, ref} from "firebase/database";
 import {If} from "@kanzitelli/if-component";
 import {ImageComponent} from "@app/components/ImageComponent";
@@ -145,7 +145,7 @@ export const task: NavioScreen = observer(({}) => {
 
                 />
                 <View
-                    style={{borderRadius: 10, borderWidth: 1, borderColor: Colors.grey50, padding: 10}}
+                    style={{borderRadius: 10, borderWidth: 1, borderColor: Colors.blue60, padding: 10}}
                     bg-bg2Color
                     padding-s2
                     flex
@@ -155,6 +155,7 @@ export const task: NavioScreen = observer(({}) => {
                         style={{textAlign: 'right'}}
                         text60
                         dark10
+                        color={Colors.blue40}
                         marginB-s2
                         >
                         צ'אט המשימה

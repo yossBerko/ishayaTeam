@@ -13,41 +13,22 @@ import {services, useServices} from '@app/services';
 import {useStores} from '@app/stores';
 import {Section} from '@app/components/section';
 import {BButton, HeaderButton, HeaderIconButton} from '@app/components/button';
-import {Reanimated2} from '@app/components/reanimated2';
+import {Reanimated2} from '../../exampels/reanimated2';
 import {Row} from '@app/components/row';
 import {useAppearance} from '@app/utils/hooks';
-import {NavioSection} from '@app/components/sections/NavioSection';
+import {NavioSection} from '../../exampels/NavioSection';
 import {appearances, appearancesUI, appearanceUIToInternal} from "@app/utils/types/enums";
 
 
 export const Messages: NavioScreen = observer(({}) => {
   useAppearance();
   const navigation = useNavigation();
-  const {counter, ui} = useStores();
+  const {ui} = useStores();
   const {t, api, navio} = useServices();
 
-  // State (local)
-  const [loading, setLoading] = useState(false);
-
-  // API Methods
-  const getCounterValue = useCallback(async () => {
-    setLoading(true);
-    try {
-      const {value} = await api.counter.get();
-
-      counter.set('value', value);
-    } catch (e) {
-      console.log('[ERROR]', e);
-    } finally {
-      setLoading(false);
-    }
-  }, [api.counter, counter]);
   const [appearance, setAppearance] = useState(ui.appearance);
 
   // Methods
-  const handleCounterDec = () => counter.set('value', counter.value - 1);
-  const handleCounterInc = () => counter.set('value', counter.value + 1);
-  const handleCounterReset = () => counter.set('value', 0);
   const appearanceInitialIndex = appearances.findIndex(it => it === appearance);
   const appearanceSegments = appearancesUI.map(it => ({label: it}));
   const handleAppearanceIndexChange = (index: number) => {
@@ -59,19 +40,6 @@ export const Messages: NavioScreen = observer(({}) => {
     navigation.setOptions({ title: 'הודעות' });
   }, []);
 
-
-/*
- <Switch value={false} onValueChange={() => console.log('value changed')}/>
- <ChipsInput
-      placeholder={'Placeholder'}
-      chips={[{label: 'Falcon 9'}, {label: 'Enterprise'}, {label: 'Challenger', borderRadius: 0}]}
-  />
-            <WheelPicker
-              items={[{label: 'Yes', value: 'yes'}, {label: 'No', value: 'no'}, {label: 'Maybe', value: 'maybe'}]}
-              initialValue={'yes'}
-              onChange={() => console.log('changed')}
-          />
-  */
 
   return (
     <View flex bg-bgColor>
