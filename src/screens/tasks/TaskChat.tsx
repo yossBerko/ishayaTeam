@@ -1,25 +1,14 @@
 import React, {useState} from 'react';
 import {
-    Colors, Fader, Text, View, Constants,
-    Assets,
-    Spacings,
-    TextField,
-    Button,
-    Switch
+    Colors, Text, View, Spacings, TextField,
 } from 'react-native-ui-lib';
 import {useStores} from "@app/stores";
 import {AvatarCom} from "@app/components/Avatar";
-import position = Fader.position;
-import {If} from "@kanzitelli/if-component";
-import {Image} from "expo-image";
 import {ImageComponent} from "@app/components/ImageComponent";
-//import {TaskChat} from "@app/screens/tasks";
-import {Camera, CameraType, CameraCapturedPicture} from 'expo-camera';
-import {StyleSheet, TouchableOpacity, TouchableWithoutFeedback, Keyboard} from 'react-native';
-
+import {StyleSheet, TouchableOpacity, Keyboard} from 'react-native';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import {sendTaskMessage} from "@app/services/realTimeDB";
-import {TaskChat} from "@app/screens/tasks/index";
+import {TaskChat} from "@app/utils/types/databaseTypes";
 import {useServices} from "@app/services";
 import {IconComponent} from "@app/components/icon";
 

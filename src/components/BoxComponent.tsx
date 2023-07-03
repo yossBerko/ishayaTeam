@@ -7,11 +7,12 @@ type BoxProps = {
     title: string,
     iconName: any,
     color: string,
-    value: string | undefined
+    value?: string | undefined
     bg: string
+    children?: React.ReactNode;
 }
 
-export const BoxComponent = ({title, iconName, color, value, bg}:BoxProps) => {
+export const BoxComponent = ({title, iconName, color, value, bg, children}:BoxProps) => {
     return (
         <View
             style={{borderRadius: 10, borderWidth: 1, borderColor: color, padding: 10, backgroundColor: bg}}
@@ -34,7 +35,7 @@ export const BoxComponent = ({title, iconName, color, value, bg}:BoxProps) => {
                 style={{textAlign: 'center'}}
                 text70
             >
-                {value}
+                {(children)? children : (value)? value : ('')}
             </Text>
         </View>
     );

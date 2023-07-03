@@ -21,37 +21,14 @@ import {DateTime} from "i18n-js";
 import * as url from "url";
 import {buildTasks} from "@app/screens/tasks/TaskBuilder";
 import {useNavigation} from "@react-navigation/native";
-import {HeaderLogoutButton} from "@app/components/button";
-
-
-export type TaskChat = {
-    data: string;
-    owner: string;
-    ownerImage: string;
-    time: string;
-    type: 'text' | 'image';
-};
-
-export type taskContent = {
-    id: number,
-    title: string,
-    task?: string,
-    location?: string,
-    images?: string[],
-    date: string,
-    deadline: string,
-    organsStatus: string,
-    workStatus: string,
-    client?: string,
-    clientImage?: string,
-    worker?: string,
-    messages?: { [key: string]: TaskChat },
-};
+import {HeaderLogoutButton, IconButton} from "@app/components/button";
+import {taskContent, TaskChat} from "@app/utils/types/databaseTypes";
 
 
 export const tasks: React.FC = observer(() => {
     //modifiers:
     useAppearance();
+    const {ui} = useStores();
     const {navio} = useServices();
     const navigation = useNavigation();
     const [tasksIndex, setTasksIndex] = useState<number>();
@@ -122,11 +99,11 @@ export const tasks: React.FC = observer(() => {
     }, []);
 
 
-    function tasks(): JSX.Element[]{
+    function tasks(): JSX.Element[] {
         const tasks: JSX.Element[] = [];
         const database = getDatabase();
         if (tasksIndex !== undefined) {
-            for(let i = 0; i <= tasksIndex; i++){
+            for (let i = 0; i <= tasksIndex; i++) {
                 const tasksRef = ref(database, `tasks/${i}`);
                 let task: taskContent;
                 onValue(tasksRef, (snapshot: any) => {
@@ -180,11 +157,19 @@ export const tasks: React.FC = observer(() => {
         }
         return tasks;
     }
+
     const Sections =
         useMemo(tasks, [tasks, tasksIndex]);
 
     return (
         <View flex bg-bgColor>
+            <View style={{position: 'absolute', left: 20, bottom: 20, zIndex: 1}}>
+                <IconButton
+                    name={'add-circle'}
+                    size={80}
+                    color={(ui.appearanceStr === 'Dark') ? Colors.blue60 : Colors.blue40}
+                    onPress={() => navio.N.navigate('tasksStack', {screen: 'addTask'})}/>
+            </View>
             <ScrollView contentInsetAdjustmentBehavior="always">{Sections}</ScrollView>
         </View>
     );

@@ -1,15 +1,12 @@
 import {NavioScreen} from "rn-navio";
 import {observer} from "mobx-react";
-import {useEffect, useRef, useState} from "react";
+import React, {useEffect, useRef, useState} from "react";
 import {Camera, CameraType} from "expo-camera";
 import {Text, TouchableOpacity, View, Dialog, DialogDirections, Colors, Card} from 'react-native-ui-lib';
 import * as Permissions from 'expo-permissions';
 import {sendTaskMessage} from "@app/services/realTimeDB";
 import {useNavigation, useRoute} from '@react-navigation/native';
-import {taskContent} from "@app/screens/tasks";
-import {useServices} from "@app/services";
 import {useStores} from "@app/stores";
-import {ImageComponent} from "@app/components/ImageComponent";
 import {IconComponent} from "@app/components/icon";
 import {Image} from 'expo-image';
 import {Row} from "@app/components/row";
@@ -19,6 +16,7 @@ import {navio} from "@app/navio";
 export type Params = {
     type?: 'push' | 'show';
     taskId?: string;
+    setImages?: React.Dispatch<React.SetStateAction<string[]>>
 };
 
 export const CameraScreen: NavioScreen = observer(({}) => {
@@ -82,7 +80,14 @@ export const CameraScreen: NavioScreen = observer(({}) => {
                     style={{backgroundColor: Colors.grey60}}
                 >
                     <Text
-                        style={{fontSize: 14, fontWeight: 'bold', textAlign: 'center', marginBottom: 10, marginTop: 10, color: 'black'}}
+                        style={{
+                            fontSize: 14,
+                            fontWeight: 'bold',
+                            textAlign: 'center',
+                            marginBottom: 10,
+                            marginTop: 10,
+                            color: 'black'
+                        }}
                     >
                         האם אתה בטוח שברצונך לשלוח את התמונה?
                     </Text>
@@ -108,15 +113,15 @@ export const CameraScreen: NavioScreen = observer(({}) => {
                             <View
                                 style={{marginRight: 30, marginLeft: 20}}
                             >
-                            <IconComponent
-                                name="save"
-                                size={40}
-                                color={Colors.green30}
-                                onPress={() => {
-                                    setShowDialog(false);
-                                    sendImage(data);
-                                }}
-                            />
+                                <IconComponent
+                                    name="save"
+                                    size={40}
+                                    color={Colors.green30}
+                                    onPress={() => {
+                                        setShowDialog(false);
+                                        sendImage(data);
+                                    }}
+                                />
                             </View>
 
                         </Row>
@@ -127,11 +132,17 @@ export const CameraScreen: NavioScreen = observer(({}) => {
     }
 
     const sendImage = (data: any) => {
-        const taskId = params.taskId;
-        console.log(params);
-        const name = auth.name;
-        const image = auth.image;
-        sendTaskMessage('image', data, taskId, name, image);
+        if (params.taskId) {
+            const taskId = params.taskId;
+            console.log(params);
+            const name = auth.name;
+            const image = auth.image;
+            sendTaskMessage('image', data, taskId, name, image);
+        }
+        if(params.setImages){
+            params.setImages((prev) => [...prev, data]);
+            console.log('setImages');
+        }
         navio.goBack();
 
     }
@@ -139,7 +150,7 @@ export const CameraScreen: NavioScreen = observer(({}) => {
     return (
         <View style={{flex: 1}}>
             <Camera style={{flex: 1}} type={type} ref={camRef}>
-                <View style={{flex: 1, backgroundColor: 'transparent', flexDirection: 'row', alignSelf:'center'}}>
+                <View style={{flex: 1, backgroundColor: 'transparent', flexDirection: 'row', alignSelf: 'center'}}>
                     <TouchableOpacity style={{flex: 0, alignSelf: 'flex-end', alignContent: 'center'}}
                                       onPress={takePicture}
                     >

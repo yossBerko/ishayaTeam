@@ -12,7 +12,7 @@ import {NavioScreen} from 'rn-navio';
 
 import {services, useServices} from '@app/services';
 import {useAppearance} from '@app/utils/hooks';
-import {taskContent} from "@app/screens/tasks/index";
+import {taskContent} from "@app/utils/types/databaseTypes";
 import {ScrollView} from "react-native-gesture-handler";
 import {Row} from "@app/components/row";
 import {IconComponent} from "@app/components/icon";
@@ -25,7 +25,9 @@ import {WorkStatusPiker} from "@app/components/PickerComponent";
 import {ClientCardComponent, ClientProps} from "@app/components/CardComponent";
 import {AvatarCom} from "@app/components/Avatar";
 import {useStores} from "@app/stores";
-import {TaskChatComponent} from "@app/components/TaskChat";
+import {TaskChatComponent} from "@app/screens/tasks/TaskChat";
+import {WorkStatusPikerProps} from "@app/utils/types/pikerTypes";
+
 
 export type Params = {
     type?: 'push' | 'show';
@@ -43,6 +45,8 @@ export const task: NavioScreen = observer(({}) => {
     const [clintContent, setClintContent] = React.useState<ClientProps>(
         {name: '', phone: '', image: '', clientTitle: ''}
     );
+    const [workStatus, setWorkStatus] = React.useState<WorkStatusPikerProps['value']>(
+        (params.content?.workStatus) ? params.content?.workStatus : 'בהמתנה');
 
     // const {t, navio} = useServices();
     const {ui} = useStores();
@@ -134,7 +138,12 @@ export const task: NavioScreen = observer(({}) => {
 
                     <WorkStatusPiker
                         value={taskContent.workStatus}
-                        taskId={taskContent.id}
+                        setTaskStatus={setWorkStatus}
+                        onchange={(item:WorkStatusPikerProps['value']) => {
+                            changeTaskStatus(taskContent.id, item).then(() => {
+                                console.log('Task Status Changed');
+                            });
+                        }}
                     />
                 </View>
                 <ClientCardComponent

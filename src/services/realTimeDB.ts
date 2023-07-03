@@ -1,8 +1,8 @@
 import { getDatabase, ref, onValue,update, off, DatabaseReference, push, set, get } from 'firebase/database';
-import {Dispatch, useEffect, useState} from 'react';
+import React, {Dispatch, useEffect, useState} from 'react';
 import url from "url";
 import {DateTime} from "i18n-js";
-import {TaskChat, taskContent} from "@app/screens/tasks";
+import {TaskChat, taskContent} from "@app/utils/types/databaseTypes";
 import {useStores} from "@app/stores";
 
 type messages = {
@@ -12,34 +12,73 @@ type messages = {
     date: Date,
     time: DateTime
 };
+
+export const pushTask = (task: taskContent) => {
+    const database = getDatabase();
+    const taskRef = push(ref(database, 'tasks'));
+    task.id = taskRef.key;
+    console.log(task);
+    set(taskRef, task);
+
+
+}
 export const useTasks = (buildTasks: any):[taskContent[], React.Dispatch<React.SetStateAction<taskContent[]>>] => {
     const [tasksIndex, setTasksIndex] = useState<number>();
+    const [tasksIndexList, setTasksIndexList] = useState<string[]>();
     const [sectionsData, setSectionsData] = useState<any>({});
 
     useEffect(() => {
         const database = getDatabase();
+        const tasksIdsListRef = ref(database, 'tasks');
+
+        const tasksIdsListListener = (snapshot: any) => {
+            let ids:string[]= [];
+            snapshot.forEach((id) => {
+                if(id){
+
+
+                ids.push(id.key);
+                console.log(id.key);
+                }
+            });
+            console.error(ids);
+            setTasksIndexList(ids);
+        }
+        onValue(tasksIdsListRef, tasksIdsListListener);
+        return () =>
+            // @ts-ignore
+            off(tasksIdsListRef, tasksIdsListListener);
+    }, []);
+    useEffect(() => {
+        const database = getDatabase();
         const tasksIndexRef = ref(database, 'index/tasks');
+
 
         const taskIndexListener = (snapshot: any) => {
             const index = snapshot.val();
             setTasksIndex(index);
+            console.log(index);
         };
 
         onValue(tasksIndexRef, taskIndexListener);
 
-        // @ts-ignore
-        return () => off(tasksIndexRef, taskIndexListener);
+
+        return () =>
+            // @ts-ignore
+            off(tasksIndexRef, taskIndexListener);
+
+
     }, []);
 
     useEffect(() => {
-        if (tasksIndex !== undefined) {
+        if (tasksIndex !== undefined && tasksIndexList !== undefined) {
             const database = getDatabase();
             const allTasks:taskContent[] = [];
             const taskRefs:DatabaseReference[] = [];
             const taskListeners:any[] = [];
 
             for (let i = 0; i <= tasksIndex; i++) {
-                const tasksRef = ref(database, `tasks/${i}`);
+                const tasksRef = ref(database, `tasks/${tasksIndexList[i]}`);
                 taskRefs.push(tasksRef);
 
                 const taskListener = (snapshot: any) => {
@@ -62,7 +101,7 @@ export const useTasks = (buildTasks: any):[taskContent[], React.Dispatch<React.S
                 });
             };
         }
-    }, [tasksIndex]);
+    }, [tasksIndex, tasksIndexList]);
 
     return [sectionsData, setSectionsData];
 }
@@ -83,30 +122,7 @@ export function listenToClient(id: string, setClintContent:Dispatch<React.SetSta
         setClintContent(data);
     });
 }
-/*export const getTasksIndex = (setTasksIndex: any) => {
-    const database = getDatabase();
-    const tasksIndexRef = ref(database, 'index/tasks');
-    onValue(tasksIndexRef, (snapshot) => {
-        const index = snapshot.val();
-        setTasksIndex(index);
-    });
-}
-export const getTasks = (tasksIndex: any, setSectionsData: any, SectionsData: any, buildTasks: any) => {
-    const database = getDatabase();
-    const allTasks: { id: number; title: string; task?: string | undefined; location?: string | undefined; images?: [(string | undefined)?] | undefined; date: Date; deadline: string; organsStatus: string; workStatus: string; client: string; worker?: string | undefined; messages?: [(messages | undefined)?] | undefined; onPress: PureFunc; }[] | { title: string; task: string; location: string; date: Date; deadline: string; organsStatus: string; workStatus: string; client: string; worker: string; onPress: () => void; }[] = [];
 
-    for (let i = 0; i <= tasksIndex; i++) {
-        const tasksRef = ref(database, `tasks/${i}`);
-        onValue(tasksRef, (snapshot) => {
-            const data = snapshot.val();
-            const task = buildTasks(data);
-            allTasks.push(task);
-            let updatedSectionsData = {...SectionsData};
-            updatedSectionsData['בביצוע'].content = allTasks;
-            setSectionsData(updatedSectionsData);
-        });
-    }
-}*/
 export const changeTaskStatus = (taskIndex: number | undefined, status: string | undefined) => {
     const database = getDatabase();
     const tasksRef = ref(database);
@@ -117,8 +133,6 @@ export const changeTaskStatus = (taskIndex: number | undefined, status: string |
     return update(tasksRef, updates);
 }
 
-
-// Function to handle sending of message
 
 
 
@@ -155,17 +169,12 @@ export const getUserDetails = async (userEmail: string | null) => {
     }
 }
 
-
-/*export const getUserDetails = (setUserDetails:any, userEmail:string | null) => {
-    console.log('getUserDetails');
-    //get user email end Extracts from it the username in English (extracts the email address up to @)
-    if(userEmail) {
-        const username = userEmail.substring(0, userEmail.indexOf('@'));
-        const database = getDatabase();
-        const dbRef = ref(database, `users/workers/${username}`);
-        onValue(dbRef, (snapshot) => {
-            const data = snapshot.val();
-            return setUserDetails = data;
-        });
-    }
-}*/
+export const ListenToList = async <T> (path:string, setValue: React.Dispatch<React.SetStateAction<T>>) => {
+    const db = getDatabase();
+    const dbRef = ref(db, path);
+    onValue(dbRef, (snapshot) => {
+        const data = snapshot.val();
+        setValue(data);
+        console.log(data);
+    });
+}

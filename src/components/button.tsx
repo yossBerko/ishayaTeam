@@ -75,6 +75,26 @@ export const HeaderIconButton: React.FC<IconProps> = ({
     );
 };
 
+export const IconButton: React.FC<IconProps> = ({
+                                                        name,
+                                                        size,
+                                                        color,
+                                                        viewProps,
+                                                        onPress,
+                                                        bounceable = false,
+                                                        ...modifiers
+                                                    }: IconProps) => {
+    return (
+        <View {...modifiers}>
+            <Bounceable onPress={onPress}>
+                <View>
+                    <IconComponent name={name} size={size} color={color}/>
+                </View>
+            </Bounceable>
+        </View>
+    );
+}
+
 
 export function HeaderLogoutButton({navigation}: any) {
     const showAuthFlow = useShowAuthFlow();

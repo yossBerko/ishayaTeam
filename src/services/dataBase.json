@@ -86,13 +86,6 @@
       "clientImage": "https://firebasestorage.googleapis.com/v0/b/ishayateam.appspot.com/o/FAvatar3.png?alt=media&token=9bcdb764-fd5b-4ac9-80ef-0c842bad57c7",
       "worker": "vich770@gmail.com",
       "messages": [
-        {
-          "type": "text",
-          "data": "אבל אני לא מבין למה לעטוף טוב? זה לא יעזור לכלום ומי שישמע מסתובבים פה קינגים",
-          "owner": "דוד העצלן",
-          "ownerImage": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTXie10zXh3dMqvdPRAlMLUF4IOQXPXwXBCBA&usqp=CAU",
-          "time": "11:30"
-        }
       ]
 
     },
@@ -112,13 +105,6 @@
       "clientImage": "https://firebasestorage.googleapis.com/v0/b/ishayateam.appspot.com/o/MAvatar4.png?alt=media&token=250c8783-790d-4252-a9e9-3eaf126dd41d",
       "worker": "vich770@gmail.com",
       "messages": [
-        {
-          "type": "",
-          "data": "",
-          "owner": "",
-          "date": "",
-          "time": ""
-        }
       ]
 
     }

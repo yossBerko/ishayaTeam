@@ -1,4 +1,5 @@
 export const buildTasks = (data: any) => {
+    if(data === null) return null;
     return {
         id: data.id,
         title: `${data.title}`,

@@ -17,6 +17,7 @@ import {AuthLogin} from './screens/auth/login';
 import {StackScreenOptions, TTabsContentValue} from "rn-navio/dist/types";
 import {task} from "@app/screens/tasks/Task";
 import {CameraScreen} from "@app/screens/CameraScreen";
+import {addTask} from "@app/screens/tasks/addTask";
 
 
 const isAdmin: boolean = false;
@@ -66,8 +67,10 @@ export const navio = Navio.build({
 
         TimeClock,
 
+        // for tasks flow
         tasks,
         task,
+        addTask,
 
         CameraScreen,
 
@@ -86,7 +89,7 @@ export const navio = Navio.build({
         notificationStack: {
             screens: ['Messages'],
         },
-        tasksStack: ['tasks','task','CameraScreen'],
+        tasksStack: ['tasks','task','CameraScreen', 'addTask'],
         timeClockStack: {
             screens: ['TimeClock'],
             containerOptions: {
