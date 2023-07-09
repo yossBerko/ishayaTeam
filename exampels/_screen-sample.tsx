@@ -8,6 +8,7 @@ import {NavioScreen} from 'rn-navio';
 import {services, useServices} from '@app/services';
 import {useAppearance} from '@app/utils/hooks';
 import {NavioSection} from './NavioSection';
+import {getNavio} from '@app/navio';
 
 export type Params = {
   type?: 'push' | 'show';
@@ -19,7 +20,9 @@ export const Example: NavioScreen = observer(() => {
   const navigation = useNavigation();
   const {params: _p} = useRoute(); // this is how to get passed params with navio.push('Screen', params)
   const params = _p as Params; // use as params?.type
-  const {t, navio} = useServices();
+  const {t} = useServices();
+    const navio = getNavio();
+
   // const {ui} = useStores();
 
   // State

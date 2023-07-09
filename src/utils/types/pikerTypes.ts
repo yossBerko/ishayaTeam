@@ -8,7 +8,7 @@ export type WorkStatusPikerProps = {
 }
 
 export type OrgansStatusProps = {
-    organsStatus: 'נמוכה' | 'בינונית' | 'גבוהה' | 'קריטית' | string,
+    organsStatus: 'נמוכה' | 'בינונית' | 'גבוהה' | 'קריטית',
     setOrgansStatus: React.Dispatch<React.SetStateAction<OrgansStatusProps['organsStatus']>>
 }
 

@@ -17,103 +17,24 @@ export const pushTask = (task: taskContent) => {
     const database = getDatabase();
     const taskRef = push(ref(database, 'tasks'));
     task.id = taskRef.key;
-    console.log(task);
+    console.log('I push task!!: '+task.organsStatus);
     set(taskRef, task);
 
 
 }
-export const useTasks = (buildTasks: any):[taskContent[], React.Dispatch<React.SetStateAction<taskContent[]>>] => {
-    const [tasksIndex, setTasksIndex] = useState<number>();
-    const [tasksIndexList, setTasksIndexList] = useState<string[]>();
-    const [sectionsData, setSectionsData] = useState<any>({});
 
-    useEffect(() => {
-        const database = getDatabase();
-        const tasksIdsListRef = ref(database, 'tasks');
-
-        const tasksIdsListListener = (snapshot: any) => {
-            let ids:string[]= [];
-            snapshot.forEach((id) => {
-                if(id){
-
-
-                ids.push(id.key);
-                console.log(id.key);
-                }
-            });
-            console.error(ids);
-            setTasksIndexList(ids);
-        }
-        onValue(tasksIdsListRef, tasksIdsListListener);
-        return () =>
-            // @ts-ignore
-            off(tasksIdsListRef, tasksIdsListListener);
-    }, []);
-    useEffect(() => {
-        const database = getDatabase();
-        const tasksIndexRef = ref(database, 'index/tasks');
-
-
-        const taskIndexListener = (snapshot: any) => {
-            const index = snapshot.val();
-            setTasksIndex(index);
-            console.log(index);
-        };
-
-        onValue(tasksIndexRef, taskIndexListener);
-
-
-        return () =>
-            // @ts-ignore
-            off(tasksIndexRef, taskIndexListener);
-
-
-    }, []);
-
-    useEffect(() => {
-        if (tasksIndex !== undefined && tasksIndexList !== undefined) {
-            const database = getDatabase();
-            const allTasks:taskContent[] = [];
-            const taskRefs:DatabaseReference[] = [];
-            const taskListeners:any[] = [];
-
-            for (let i = 0; i <= tasksIndex; i++) {
-                const tasksRef = ref(database, `tasks/${tasksIndexList[i]}`);
-                taskRefs.push(tasksRef);
-
-                const taskListener = (snapshot: any) => {
-                    const data = snapshot.val();
-                    const task = buildTasks(data);
-                    allTasks.push(task);
-
-                    if (allTasks.length === tasksIndex + 1) {
-                        setSectionsData(allTasks);
-                    }
-                };
-
-                taskListeners.push(taskListener);
-                onValue(tasksRef, taskListener);
-            }
-
-            return () => {
-                taskRefs.forEach((tasksRef, i) => {
-                    off(tasksRef, taskListeners[i]);
-                });
-            };
-        }
-    }, [tasksIndex, tasksIndexList]);
-
-    return [sectionsData, setSectionsData];
-}
-
-export function listenToTask(id: number, setTaskContent:Dispatch<React.SetStateAction<taskContent>>) {
+export function listenToTask(id: string, setTaskContent:Dispatch<React.SetStateAction<taskContent>>) {
     const database = getDatabase();
     const dbRef = ref(database, `tasks/${id}`);
-    onValue(dbRef, (snapshot) => {
+    const unsubscribe = onValue(dbRef, (snapshot) => {
         const data = snapshot.val();
         setTaskContent(data);
+        console.log("dfdf "+data.title);
     });
+
+    return unsubscribe;
 }
+
 export function listenToClient(id: string, setClintContent:Dispatch<React.SetStateAction<string>>) {
     const database = getDatabase();
     const dbRef = ref(database, `users/clients/${id}`);
@@ -123,7 +44,7 @@ export function listenToClient(id: string, setClintContent:Dispatch<React.SetSta
     });
 }
 
-export const changeTaskStatus = (taskIndex: number | undefined, status: string | undefined) => {
+export const changeTaskStatus = (taskIndex: string | null, status: string | undefined) => {
     const database = getDatabase();
     const tasksRef = ref(database);
     const updates:any = {};

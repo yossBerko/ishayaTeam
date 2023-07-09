@@ -4,11 +4,13 @@ import '../../exampels/_hydration';
 import {UIStore} from './ui';
 import {CounterStore} from '../../exampels/counterStores';
 import {AuthStore} from './auth';
+import {getNavio} from "@app/navio";
 
 class Stores {
   ui = new UIStore();
   //counter = new CounterStore();
   auth = new AuthStore();
+
 }
 export const stores = new Stores();
 

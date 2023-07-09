@@ -23,6 +23,7 @@ export type taskContent = {
 };
 
 export type client = {
+    id: string,
     name: string,
     clientTitle: string,
     image: string,

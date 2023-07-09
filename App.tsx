@@ -9,7 +9,7 @@ import {GestureHandlerRootView} from 'react-native-gesture-handler';
 import * as Localization from 'expo-localization';
 
 
-import {NavioApp} from '@app/navio';
+import {IsAdmin, NavioApp} from '@app/navio';
 import {
     configureDesignSystem,
     getNavigationTheme,
@@ -27,19 +27,18 @@ LogBox.ignoreLogs([
 ]);
 
 // @ts-ignore
-export default (): JSX.Element => {
+export default (): JSX.Element | null => {
     useAppearance();
     const [ready, setReady] = useState(false);
     const [loginCheck, setLoginCheck] = useState(true);
     const [isLoggedIn, setIsLoggedIn] = useState(false);
+    const [isAdmin, setIsAdmin] = useState('false');
 
     const onLaunch = useCallback(async () => {
         await SplashScreen.preventAutoHideAsync();
-
         await hydrateStores();
-        configureDesignSystem();
+        await configureDesignSystem();
         await initServices();
-
         setReady(true);
         await SplashScreen.hideAsync();
     }, []);
@@ -47,31 +46,51 @@ export default (): JSX.Element => {
     useEffect(() => {
         onLaunch();
     }, [onLaunch]);
+
     const {api} = useServices();
     const {auth} = useStores();
 
-    // ... rest of your code
-   if(ready) {
-       if(loginCheck) {
-           auth.checkLoginStatus(api);
-           setIsLoggedIn(auth.state === 'logged-in');
-           setLoginCheck(false);
-       }
-       return (
-           <GestureHandlerRootView style={{flex: 1}}>
-               <AppProvider>
-                   <StatusBar style={getStatusBarStyle()} backgroundColor={getStatusBarBGColor()}/>
-                   <NavioApp
-                       navigationContainerProps={{
-                           theme: getNavigationTheme(),
-                           linking: {
-                               prefixes: [Linking.createURL('/')],
-                           },
-                       }}
-                       root={isLoggedIn ? 'AppTabs' : 'AuthFlow'}
-                   />
-               </AppProvider>
-           </GestureHandlerRootView>
-       );
-   }
+    useEffect(() => {
+        // @ts-ignore
+        setIsAdmin(auth.isAdmin);
+    }, [auth.isAdmin]);
+
+    useEffect(() => {
+        if (auth.state === 'logged-in') {
+            setIsLoggedIn(true);
+        } else {
+            setIsLoggedIn(false);
+        }
+    }, [auth.state]);
+
+    // Check login status once after initial render
+    useEffect(() => {
+        if (loginCheck) {
+            auth.checkLoginStatus(api);
+            setLoginCheck(false);
+        }
+    }, [loginCheck, auth, api]);
+
+    if (ready && !loginCheck) {
+        console.log("isAdmin Value: ", isAdmin, " Type: ", typeof isAdmin);
+        return (
+            <GestureHandlerRootView style={{flex: 1}}>
+                <AppProvider>
+                    <StatusBar style={getStatusBarStyle()} backgroundColor={getStatusBarBGColor()}/>
+                    <NavioApp
+                        navigationContainerProps={{
+                            theme: getNavigationTheme(),
+                            linking: {
+                                prefixes: [Linking.createURL('/')],
+                            },
+                        }}
+                        root={(isAdmin as unknown as string) === 'true' ? 'AppAdminTabs' : (isLoggedIn ? 'AppTabs' : 'AuthFlow')}
+                    />
+                </AppProvider>
+            </GestureHandlerRootView>
+        );
+    }
+
+    // Maybe render a loading indicator or null while waiting for readiness
+    return null;
 };

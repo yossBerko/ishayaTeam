@@ -18,7 +18,7 @@ export class AuthApi {
         email: string;
         status: string;
         password: string;
-        isAdmin: string;
+        isAdmin: boolean;
     };
 
     constructor() {
@@ -29,7 +29,7 @@ export class AuthApi {
             "email": "",
             "status": "",
             "password": "",
-            "isAdmin": ""
+            "isAdmin": false
         };
     }
 
@@ -77,20 +77,21 @@ export class AuthApi {
     async login(email: string, password: string, auth: any) {
         console.log(email+password);
         try {
-            console.log('נכנס לעשות לוג אין')
+            console.log('log in in firebase: '+email+' password: '+password);
             const userCredential = await signInWithEmailAndPassword(firebaseAuth, email, password);
             const user = userCredential.user;
 
             if (user) {
                 console.log('bcljhbljhblkjhblkjh');
                 console.log('המשתמש אושר בfirebse');
-                this.userDetails = await getUserDetails(user.email);
+                this.userDetails = await getUserDetails(email);
                 auth.set('state', 'logged-in');
                 console.log(user.email);
                 auth.set('email', `${user.email}`);
-                auth.set('name',`${user.displayName}`);
                 auth.set('password', password);
                 auth.set('image',`${this.userDetails.image}`);
+                auth.set('isAdmin', (this.userDetails.isAdmin as unknown as string) === 'true');
+                auth.set('name',`${this.userDetails.name}`);
                 return {
                     status: 'success',
                     data: {

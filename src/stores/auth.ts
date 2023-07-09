@@ -12,13 +12,13 @@ export class AuthStore implements IStore {
   name='';
   image='';
   password= '';
+  isAdmin= false;
 
   // getters
   get stateStr() {
     return this.state === 'logged-in' ? `Email: ${this.email}\nPress to logout` : 'Press to login';
   }
 
-  // Removed the isLogin getter from here
 
   // methods
   async checkLoginStatus(api: ApiService) {
@@ -53,8 +53,8 @@ export class AuthStore implements IStore {
     makeAutoObservable(this);
 
     makePersistable(this, {
-      name: AuthStore.name,
-      properties: ['email', 'state', 'name', 'password', 'image'],
+      name: AuthStore.toString(),
+      properties: ['email', 'state', 'name', 'password', 'image', 'isAdmin'],
     });
   }
 

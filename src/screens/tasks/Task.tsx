@@ -27,7 +27,7 @@ import {AvatarCom} from "@app/components/Avatar";
 import {useStores} from "@app/stores";
 import {TaskChatComponent} from "@app/screens/tasks/TaskChat";
 import {WorkStatusPikerProps} from "@app/utils/types/pikerTypes";
-
+import {getNavio} from '@app/navio';
 
 export type Params = {
     type?: 'push' | 'show';
@@ -39,9 +39,9 @@ export const task: NavioScreen = observer(({}) => {
     const navigation = useNavigation();
     const {params: _p} = useRoute(); // this is how to get passed params with navio.push('Screen', params)
     const params = _p as Params; // use as params?.type
-    const {t, navio} = useServices();
+    const {t} = useServices();
     // @ts-ignore
-    const [taskContent, setTaskContent] = React.useState<taskContent>(params.content);
+    const [thisTaskContent, setTaskContent] = React.useState<taskContent>(params.content);
     const [clintContent, setClintContent] = React.useState<ClientProps>(
         {name: '', phone: '', image: '', clientTitle: ''}
     );
@@ -50,6 +50,7 @@ export const task: NavioScreen = observer(({}) => {
 
     // const {t, navio} = useServices();
     const {ui} = useStores();
+    const navio = getNavio();
 
 
     // Start
@@ -57,27 +58,36 @@ export const task: NavioScreen = observer(({}) => {
         configureUI();
     }, []);
     useEffect(() => {
+        let unsubscribe:any= null, unsubscribe2:any= null;
         if (params.content?.id) {
-            listenToTask(params.content?.id, setTaskContent);
+            unsubscribe = listenToTask(params.content?.id, setTaskContent);
+
         }
         if (params.content?.client) {
             const db = getDatabase();
             const dbRef = ref(db, 'users/clients/' + params.content?.client);
-            onValue(dbRef, (snapshot) => {
+            unsubscribe2= onValue(dbRef, (snapshot) => {
                 const data = snapshot.val();
                 setClintContent(data);
             });
         }
-    }, [params.content?.id, params.content?.client]);
+        return () => {
+            if (unsubscribe) {
+                unsubscribe();
+            }
+            if (unsubscribe2) {
+                unsubscribe2();
+            }
+        }
+    }, []);
 
 
     const configureUI = () => {
         navigation.setOptions({title: params.content?.title})
     }
 
-
-    return (
-        <View flex bg-bgColor>
+    const Sections = useMemo(() => {
+        return(
             <ScrollView contentInsetAdjustmentBehavior="always">
                 <View
                     style={{borderRadius: 10, borderWidth: 1, borderColor: Colors.grey50, padding: 10}}
@@ -95,11 +105,11 @@ export const task: NavioScreen = observer(({}) => {
                     >
                         אז מה לעשות?
                     </Text>
-                    <Text style={{textAlign: 'right'}}>{taskContent.task}</Text>
+                    <Text style={{textAlign: 'right'}}>{thisTaskContent.task}</Text>
                     {If({
-                        _: !!taskContent.images?.length,
+                        _: !!thisTaskContent.images?.length,
                         _then: () => (
-                            <ImageComponent images={taskContent.images}/>
+                            <ImageComponent images={thisTaskContent.images}/>
 
                         ),
                     })}
@@ -111,7 +121,7 @@ export const task: NavioScreen = observer(({}) => {
                         title='דד-ליין'
                         iconName='md-timer-outline'
                         color={(ui.appearanceStr === 'Dark') ? Colors.red80 : Colors.red10}
-                        value={taskContent.deadline}
+                        value={thisTaskContent.deadline}
                         bg={(ui.appearanceStr === 'Dark') ? Colors.red10 : Colors.red80}
                     />
 
@@ -119,7 +129,7 @@ export const task: NavioScreen = observer(({}) => {
                         title='איפה?'
                         iconName='location'
                         color={(ui.appearanceStr === 'Dark') ? Colors.purple80 : Colors.purple10}
-                        value={taskContent.location}
+                        value={thisTaskContent.location}
                         bg={(ui.appearanceStr === 'Dark') ? Colors.purple20 : Colors.purple80}
                     />
 
@@ -137,10 +147,10 @@ export const task: NavioScreen = observer(({}) => {
                     >סטטוס עבודה:</Text>
 
                     <WorkStatusPiker
-                        value={taskContent.workStatus}
+                        value={thisTaskContent.workStatus}
                         setTaskStatus={setWorkStatus}
                         onchange={(item:WorkStatusPikerProps['value']) => {
-                            changeTaskStatus(taskContent.id, item).then(() => {
+                            changeTaskStatus(thisTaskContent.id, item).then(() => {
                                 console.log('Task Status Changed');
                             });
                         }}
@@ -166,18 +176,19 @@ export const task: NavioScreen = observer(({}) => {
                         dark10
                         color={Colors.blue40}
                         marginB-s2
-                        >
+                    >
                         צ'אט המשימה
                     </Text>
-                            <TaskChatComponent messages={taskContent.messages} taskId={`${taskContent.id}`}/>
+                    <TaskChatComponent messages={thisTaskContent.messages} taskId={`${thisTaskContent.id}`}/>
                 </View>
-
-
-
-
-
-
             </ScrollView>
+        );
+    }, [thisTaskContent, clintContent]);
+
+
+    return (
+        <View flex bg-bgColor>
+            {Sections}
         </View>
     );
 });

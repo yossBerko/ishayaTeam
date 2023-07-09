@@ -5,11 +5,13 @@ import {BButton} from '@app/components/button';
 import {Section} from '@app/components/section';
 import {randomNum} from './help';
 import {Row} from '@app/components/row';
+import {getNavio} from '@app/navio';
 
 type Props = {};
 
 export const NavioSection: React.FC<Props> = ({}) => {
-  const {t, navio} = useServices();
+  const {t} = useServices();
+  const navio = getNavio();
 
   // Methods
   const pushScreen = () => navio.push('TimeClock', {type: 'push'});

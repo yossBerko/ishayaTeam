@@ -9,7 +9,7 @@ import {If} from "@kanzitelli/if-component";
 export const StatusChip: React.FC<ChipProps> = (props) => {
     let StatusChip;
     switch (props.label) {
-        case 'קריטי': {
+        case 'קריטית': {
             StatusChip = useMemo(
                 () => (
                     <View padding-s1>
@@ -35,7 +35,7 @@ export const StatusChip: React.FC<ChipProps> = (props) => {
             );
         }
         break;
-        case 'גבוה': {
+        case 'גבוהה': {
             StatusChip = useMemo(
                 () => (
                     <View padding-s2>
@@ -56,7 +56,7 @@ export const StatusChip: React.FC<ChipProps> = (props) => {
             );
         }
         break;
-        case 'בינוני': {
+        case 'בינונית': {
             StatusChip = useMemo(
                 () => (
                     <View padding-s2>
@@ -77,7 +77,7 @@ export const StatusChip: React.FC<ChipProps> = (props) => {
             );
         }
         break;
-        case 'נמוך': {
+        case 'נמוכה': {
             StatusChip = useMemo(
                 () => (
                     <View padding-s2>

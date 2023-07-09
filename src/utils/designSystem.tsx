@@ -160,10 +160,9 @@ export const tabScreenDefaultOptions = (): BottomTabNavigationOptions => ({
 
   tabBarActiveTintColor: Colors.primary,
   tabBarInactiveTintColor: Colors.grey40,
-  tabBarStyle: {backgroundColor: Colors.bgColor, borderTopWidth: 0, elevation: 0},
-
-
+  tabBarStyle: {backgroundColor: Colors.bgColor, borderTopWidth: 1, elevation: 0, height: 60},
 });
+
 
 export const drawerScreenDefaultOptions = (): DrawerNavigationOptions => ({
 
@@ -172,17 +171,20 @@ export const drawerScreenDefaultOptions = (): DrawerNavigationOptions => ({
 export const getTabBarIcon =
   (tabName: string) =>
   ({focused, color, size}: {focused: boolean; color: string; size: number}) =>
-    <Icon name={getTabIconName(tabName, focused)} size={size} color={color} />;
+    <Icon name={getTabIconName(tabName, focused)} size={32} color={color} />;
 
 const getTabIconName = (tabName: string, focused: boolean): IconName => {
   if (tabName === 'NotifyTab') {
     return focused ? 'notifications' : 'notifications-outline';
   }
   if (tabName === 'TasksTab') {
-    return focused ? 'checkmark-done' : 'checkmark-done-outline';
+    return focused ? 'checkmark-done-circle-sharp' : 'checkmark-done-circle-outline';
   }
   if (tabName === 'ClockTab') {
-    return focused ? 'construct' : 'construct-outline';
+    return focused ? 'finger-print' : 'finger-print';
+  }
+  if (tabName === 'AdminTab') {
+    return focused ? 'clipboard' : 'clipboard-outline';
   }
 
   return 'list';

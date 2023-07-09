@@ -1,5 +1,5 @@
 import {Messages} from "@app/screens/main";
-import {TimeClock} from "@app/screens/TimeClock";
+import {TimeClock} from "@app/screens/timeClock/TimeClock";
 
 export const en = {
   Messages: {

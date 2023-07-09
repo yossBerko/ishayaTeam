@@ -11,6 +11,7 @@ import {sendTaskMessage} from "@app/services/realTimeDB";
 import {TaskChat} from "@app/utils/types/databaseTypes";
 import {useServices} from "@app/services";
 import {IconComponent} from "@app/components/icon";
+import {getNavio} from '@app/navio';
 
 type TaskChatProps = {
     messages: { [key: string]: TaskChat } | undefined
@@ -19,7 +20,8 @@ type TaskChatProps = {
 
 export const TaskChatComponent = ({messages, taskId}: TaskChatProps) => {
     const {auth, ui} = useStores();
-    const {t, navio} = useServices();
+    const {t} = useServices();
+    const navio = getNavio();
 
     const [message, setMessage] = useState<string>('');
 

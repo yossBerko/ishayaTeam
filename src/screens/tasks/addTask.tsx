@@ -10,7 +10,7 @@ import {
 import {observer} from 'mobx-react';
 import {useNavigation} from '@react-navigation/native';
 import {NavioScreen} from 'rn-navio';
-
+import {getNavio} from '@app/navio';
 
 import {services, useServices} from '@app/services';
 import {useAppearance} from '@app/utils/hooks';
@@ -30,30 +30,22 @@ import {
     TimePiker,
     WorkStatusPiker
 } from "@app/components/PickerComponent";
-import {ClientCardComponent, ClientProps} from "@app/components/CardComponent";
-import {AvatarCom} from "@app/components/Avatar";
 import {useStores} from "@app/stores";
-import {TaskChatComponent} from "@app/screens/tasks/TaskChat";
 import {TouchableOpacity} from "react-native";
 import {locationPikerProps, OrgansStatusProps, WorkStatusPikerProps} from "@app/utils/types/pikerTypes";
 
 export const addTask: NavioScreen = observer(({}) => {
     useAppearance(); // for Dark Mode
     const navigation = useNavigation();
-    const {navio} = useServices();
+    const navio = getNavio();
     const {ui} = useStores();
-    /*
-        const [taskContent, setTaskContent] = React.useState<taskContent>(params.content);
-        const [clintContent, setClintContent] = React.useState<ClientProps>(
-            {name: '', phone: '', image: '', clientTitle: ''}
-        );
-    */
     const [client, setClient] = React.useState<client>(
         {
             name: 'לחץ לבחירה',
             clientTitle: ' הכל',
             image: 'https://cdn.speedsize.com/445b3f1d-fd31-4b62-b24b-5846a3ed38ac/https://d3m9l0v76dty0.cloudfront.net/system/photos/9696452/large/690781fb492d0da16849959e919356b2.webp',
-            phone: ' '
+            phone: ' ',
+            id: ' '
         }
     );
     const [clients, setClients] = React.useState<clients>(
@@ -62,7 +54,8 @@ export const addTask: NavioScreen = observer(({}) => {
                 name: ' ',
                 clientTitle: ' ',
                 image: ' ',
-                phone: ' '
+                phone: ' ',
+                id: ' '
             }
         }
     );
@@ -94,7 +87,6 @@ export const addTask: NavioScreen = observer(({}) => {
     const [messages, setMessages] = React.useState<{ [key: string]: TaskChat }>({});
 
 
-
     // Start
     useEffect(() => {
         configureUI();
@@ -119,20 +111,21 @@ export const addTask: NavioScreen = observer(({}) => {
     };
 
     const handleAddTask = () => {
-const newTask: taskContent = {
+        const newTask: taskContent = {
             id: '',
             title: title,
             task: task,
+            location: location,
             images: images,
-            organsStatus: organsStatus,
-            workStatus: workStatus,
+            date: date.toLocaleDateString('en-US'),
             deadline: date.toLocaleTimeString('en-US', {
                 hour: 'numeric',
                 minute: 'numeric'
             }),
-            date: date.toLocaleDateString('en-US'),
-            location: location,
-            client: client.name,
+            organsStatus: organsStatus,
+            workStatus: workStatus,
+            client: client.id,
+            clientImage: client.image,
             worker: worker.email,
             messages: messages,
         }
@@ -333,7 +326,7 @@ const newTask: taskContent = {
                     />
                 </View>
                 <View marginB-s10 width={'90%'} style={{alignSelf: 'center', flex: 1}}>
-                <ClientPiker value={client} values={clients} setValues={setClient} title={'מבקש המשימה:'}/>
+                    <ClientPiker value={client} values={clients} setValues={setClient} title={'מבקש המשימה:'}/>
                 </View>
                 <View marginB-s10 width={'90%'} style={{alignSelf: 'center', flex: 1}}>
                     <ClientPiker value={worker} values={workers} setValues={setWorker} title={'עובד:'}/>

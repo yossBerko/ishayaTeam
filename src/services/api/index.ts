@@ -7,6 +7,7 @@ export class ApiService implements IService {
 //  counter: CounterApi;
   auth: AuthApi;
 
+
   constructor() {
 //    this.counter = new CounterApi();
     this.auth = new AuthApi();

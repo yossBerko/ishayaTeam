@@ -4,7 +4,7 @@ import {observer} from 'mobx-react';
 import {ScrollView} from 'react-native-gesture-handler';
 import {Bounceable} from 'rn-bounceable';
 import {If} from '@kanzitelli/if-component';
-
+import {getNavio} from '@app/navio';
 
 import {useStores} from '@app/stores';
 import {useServices} from '@app/services';
@@ -13,75 +13,36 @@ import {Row} from '@app/components/row';
 import {IconComponent} from '@app/components/icon';
 import {AvatarCom} from '@app/components/Avatar'
 import {StatusChip, DeadlineChip} from '@app/components/Chip'
-import {Section} from '@app/components/section';
 
 
-import {getDatabase, ref, onValue, get, off, DatabaseReference, DataSnapshot} from "firebase/database";
-import {DateTime} from "i18n-js";
-import * as url from "url";
-import {buildTasks} from "@app/screens/tasks/TaskBuilder";
+import {getDatabase, ref, onValue, query, orderByChild, equalTo} from "firebase/database";
 import {useNavigation} from "@react-navigation/native";
 import {HeaderLogoutButton, IconButton} from "@app/components/button";
-import {taskContent, TaskChat} from "@app/utils/types/databaseTypes";
+import {taskContent} from "@app/utils/types/databaseTypes";
 
 
 export const tasks: React.FC = observer(() => {
     //modifiers:
     useAppearance();
-    const {ui} = useStores();
-    const {navio} = useServices();
+    const {ui, auth} = useStores();
+    const navio = getNavio();
     const navigation = useNavigation();
-    const [tasksIndex, setTasksIndex] = useState<number>();
-    const [sectionsData, setSectionsData] = useState<taskContent[]>([]);
+    const [allTasks, setAllTasks] = useState<any>(undefined);
 
     //methods:
     useEffect(() => {
         const database = getDatabase();
-        const tasksIndexRef = ref(database, 'index/tasks');
-
-        const taskIndexListener = (snapshot: DataSnapshot) => {
-            const index = snapshot.val();
-            setTasksIndex(index);
+        const tasksRef = ref(database, `tasks`);
+        const tasksQ = query(tasksRef, orderByChild('worker'), equalTo(auth.email));
+        const taskListener = (snapshot: any) => {
+            console.log("snapshot.val(): " + snapshot.val());
+            if (snapshot.val() !== null)
+                setAllTasks(snapshot.val());
+            console.log("allTasks: " + allTasks);
         };
-
-        onValue(tasksIndexRef, taskIndexListener);
-
-        // @ts-ignore
-        return () => off(tasksIndexRef, taskIndexListener);
+        onValue(tasksQ, taskListener);
     }, []);
 
-    useEffect(() => {
-        if (tasksIndex !== undefined) {
-            const database = getDatabase();
-            const allTasks: taskContent[] = [];
-            const taskRefs: DatabaseReference[] = [];
-            const taskListeners: any[] = [];
-
-            for (let i = 0; i <= tasksIndex; i++) {
-                const tasksRef = ref(database, `tasks/${i}`);
-                taskRefs.push(tasksRef);
-
-                const taskListener = (snapshot: any) => {
-                    const data = snapshot.val();
-                    const task = buildTasks(data);
-                    allTasks.push(task);
-
-                    if (allTasks.length === tasksIndex + 1) {
-                        setSectionsData(allTasks);
-                    }
-                };
-
-                taskListeners.push(taskListener);
-                onValue(tasksRef, taskListener);
-            }
-
-            return () => {
-                taskRefs.forEach((tasksRef, i) => {
-                    off(tasksRef, taskListeners[i]);
-                });
-            };
-        }
-    }, [tasksIndex]);
 
     const showTask = (content: taskContent) => {
         console.log(content.workStatus);
@@ -101,29 +62,27 @@ export const tasks: React.FC = observer(() => {
 
     function tasks(): JSX.Element[] {
         const tasks: JSX.Element[] = [];
-        const database = getDatabase();
-        if (tasksIndex !== undefined) {
-            for (let i = 0; i <= tasksIndex; i++) {
-                const tasksRef = ref(database, `tasks/${i}`);
-                let task: taskContent;
-                onValue(tasksRef, (snapshot: any) => {
-                    const data = snapshot.val();
-                    task = buildTasks(data);
+        if (allTasks !== undefined) {
+            const size = Object.keys(allTasks).length;
+            const keys = Object.keys(allTasks);
+            for (let i = 0; i <= size; i++) {
+                const data = allTasks[keys[i]];
+                if (data !== undefined) {
                     tasks.push(
-                        <View key={task.title} marginV-s1>
-                            <Bounceable onPress={() => showTask(task)}>
+                        <View key={data.title} marginV-s1>
+                            <Bounceable onPress={() => showTask(data)}>
                                 <View bg-bg2Color padding-s1 br30 marginL-s3 marginR-s3>
                                     <Row flex>
                                         <View flex marginH-s3 center>
                                             <Text text60R textColor style={{textAlign: 'right'}}>
-                                                {task.title}
+                                                {data.title}
                                             </Text>
                                             {If({
-                                                _: !!task.location,
+                                                _: !!data.location,
                                                 _then: (
                                                     <Row>
                                                         <Text text70 grey20 style={{textAlign: 'right'}}>
-                                                            {task.location}
+                                                            {data.location}
                                                         </Text>
                                                         <View padding-s1>
                                                             <IconComponent name="location-outline" size={20}
@@ -134,16 +93,16 @@ export const tasks: React.FC = observer(() => {
                                             })}
                                             <Row marginH-s3>
                                                 <StatusChip
-                                                    label={task.organsStatus}/>
+                                                    label={data.organsStatus}/>
                                                 <DeadlineChip
-                                                    label={task.deadline}/>
+                                                    label={data.deadline}/>
                                             </Row>
                                         </View>
                                         <View marginH-s3>
                                             <AvatarCom
-                                                source={{uri: task.clientImage}}
+                                                source={{uri: data.clientImage}}
                                                 title={'משימה מ'}
-                                                label={task.client}
+                                                label={data.client}
                                                 size={100}
                                             />
                                         </View>
@@ -152,17 +111,21 @@ export const tasks: React.FC = observer(() => {
                             </Bounceable>
                         </View>
                     );
-                });
+                }
             }
         }
         return tasks;
     }
 
     const Sections =
-        useMemo(tasks, [tasks, tasksIndex]);
+        useMemo(tasks, [tasks, allTasks, useAppearance]);
 
     return (
-        <View flex bg-bgColor>
+        <View flex style={
+            {
+                backgroundColor: (ui.appearanceStr === 'Dark') ? Colors.black : Colors.white,
+            }
+        }>
             <View style={{position: 'absolute', left: 20, bottom: 20, zIndex: 1}}>
                 <IconButton
                     name={'add-circle'}

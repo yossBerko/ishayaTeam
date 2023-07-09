@@ -18,13 +18,15 @@ import {Row} from '@app/components/row';
 import {useAppearance} from '@app/utils/hooks';
 import {NavioSection} from '../../exampels/NavioSection';
 import {appearances, appearancesUI, appearanceUIToInternal} from "@app/utils/types/enums";
+import {getNavio} from '@app/navio';
 
 
 export const Messages: NavioScreen = observer(({}) => {
   useAppearance();
   const navigation = useNavigation();
   const {ui} = useStores();
-  const {t, api, navio} = useServices();
+  const {t, api} = useServices();
+    const navio = getNavio();
 
   const [appearance, setAppearance] = useState(ui.appearance);
 

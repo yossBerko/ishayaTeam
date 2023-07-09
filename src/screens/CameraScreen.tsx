@@ -10,7 +10,8 @@ import {useStores} from "@app/stores";
 import {IconComponent} from "@app/components/icon";
 import {Image} from 'expo-image';
 import {Row} from "@app/components/row";
-import {navio} from "@app/navio";
+import {useServices} from "@app/services";
+import {getNavio} from '@app/navio';
 
 
 export type Params = {
@@ -24,6 +25,7 @@ export const CameraScreen: NavioScreen = observer(({}) => {
     const navigation = useNavigation();
     const params = _p as Params; // use as params?.type
     const {auth, ui} = useStores();
+    const navio = getNavio();
     const [hasPermission, setHasPermission] = useState<boolean | null>(null);
     const [type, setType] = useState(CameraType.back);
     const [showDialog, setShowDialog] = useState(false);

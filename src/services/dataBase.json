@@ -12,7 +12,7 @@
       ],
       "date": "19.05.2023",
       "deadline": "12:00",
-      "organsStatus": "בינוני",
+      "organsStatus": "בינונית",
       "workStatus": "בהמתנה",
       "client": "estyShrayber",
       "clientImage":"https://firebasestorage.googleapis.com/v0/b/ishayateam.appspot.com/o/FAvatar2.png?alt=media&token=97128f48-5c1e-44b4-bc93-6155a13f29c8",
@@ -45,7 +45,7 @@
       ],
       "date": "15.09.2024",
       "deadline": "23:00",
-      "organsStatus": "קריטי",
+      "organsStatus": "קריטית",
       "workStatus": "בהמתנה",
       "client": "mosheShilat",
       "clientImage": "https://firebasestorage.googleapis.com/v0/b/ishayateam.appspot.com/o/MAvatar1.png?alt=media&token=0a3c4298-8ff0-466e-b6a6-cb5d862abce6",
@@ -80,7 +80,7 @@
       ],
       "date": "19.05.2023",
       "deadline": "12:00",
-      "organsStatus": "נמוך",
+      "organsStatus": "נמוכה",
       "workStatus": "בהמתנה",
       "client": "chayaVales",
       "clientImage": "https://firebasestorage.googleapis.com/v0/b/ishayateam.appspot.com/o/FAvatar3.png?alt=media&token=9bcdb764-fd5b-4ac9-80ef-0c842bad57c7",
@@ -99,7 +99,7 @@
       ],
       "date": "15.09.2024",
       "deadline": "23:00",
-      "organsStatus": "קריטי",
+      "organsStatus": "קריטית",
       "workStatus": "בהמתנה",
       "client": "mosheShilat",
       "clientImage": "https://firebasestorage.googleapis.com/v0/b/ishayateam.appspot.com/o/MAvatar4.png?alt=media&token=250c8783-790d-4252-a9e9-3eaf126dd41d",
@@ -112,18 +112,21 @@
   "users": {
     "clients": {
       "chayaVales": {
+        "id": "chayaVales",
         "clientTitle": "אחראית כנס החסידות",
         "name": "חיה וולס",
         "phone": 972525352770,
         "image": "https://firebasestorage.googleapis.com/v0/b/ishayateam.appspot.com/o/FAvatar3.png?alt=media&token=9bcdb764-fd5b-4ac9-80ef-0c842bad57c7"
       },
       "estyShrayber": {
+        "id": "estyShrayber",
         "clientTitle": "מנהלת כללית",
         "name": "אסתי שרייבר",
         "phone": 972525352770,
         "image":"https://firebasestorage.googleapis.com/v0/b/ishayateam.appspot.com/o/FAvatar2.png?alt=media&token=97128f48-5c1e-44b4-bc93-6155a13f29c8"
       },
       "mosheShilat": {
+        "id": "mosheShilat",
         "clientTitle": "מנהל כללי",
         "name": "משה שילת",
         "phone": 972525352770,
@@ -136,22 +139,19 @@
         "phone": "+972525352770",
         "image": "https://firebasestorage.googleapis.com/v0/b/ishayateam.appspot.com/o/Yossi_Berkowitz_A_cartoon_of_a_guy_with_long_sideburns_and_a_bi_b86f35c6-3ba5-41c6-b736-0dc732536ffa.PNG?alt=media&token=19261038-f61d-4f02-a581-22923d4f1093",
         "email": "vich770@gmail.com",
-        "status": "nutHere",
+        "status": "atHome",
         "password": "q1q1q1q1",
         "isAdmin": "true"
       },
-      "ishayaDrazeen": {
+      "ishaya": {
         "name": "ישעיה",
         "phone": "+972525352770",
         "image": "https://firebasestorage.googleapis.com/v0/b/ishayateam.appspot.com/o/MAvatar4.png?alt=media&token=250c8783-790d-4252-a9e9-3eaf126dd41d",
         "email": "ishaya@ishayateam.com",
-        "status": "nutHere",
+        "status": "atHome",
         "password": "123456",
         "isAdmin": "false"
       }
     }
-  },
-  "index": {
-    "tasks": 3
   }
 }

@@ -1,9 +1,11 @@
 import {useStores} from "@app/stores";
 import {useServices} from "@app/services/index";
+import {getNavio} from '@app/navio';
 
 export const useShowAuthFlow = () => {
     const {auth} = useStores();
-    const {navio,api} = useServices();
+    const {api} = useServices();
+    const navio = getNavio();
 
     return () => {
         if (auth.state === 'logged-in')

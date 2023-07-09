@@ -2,7 +2,7 @@ import {Navio} from 'rn-navio';
 
 import {Messages} from '@app/screens/main';
 import {tasks} from '@app/screens/tasks';
-import {TimeClock} from '@app/screens/TimeClock';
+import {TimeClock} from '@app/screens/timeClock/TimeClock';
 import {Setting} from "@app/screens/Setting";
 
 import {useAppearance} from '@app/utils/hooks';
@@ -18,11 +18,16 @@ import {StackScreenOptions, TTabsContentValue} from "rn-navio/dist/types";
 import {task} from "@app/screens/tasks/Task";
 import {CameraScreen} from "@app/screens/CameraScreen";
 import {addTask} from "@app/screens/tasks/addTask";
+import {useStores} from "@app/stores";
+import {AuthStore} from "@app/stores/auth";
+
+export class IsAdmin {
+    static isAdmin: boolean = false;
+
+}
 
 
-const isAdmin: boolean = false;
-
-const createTabsContent = (isAdmin: boolean): any => {
+const createTabsContent = (): any => {
     let tabsContent: any = {
         NotifyTab: {
             stack: 'notificationStack',
@@ -47,16 +52,39 @@ const createTabsContent = (isAdmin: boolean): any => {
         },
     };
 
-    if (isAdmin) {
-        tabsContent.AdminTab = {
+    return tabsContent;
+};
+const createTabsAdminContent = (): any => {
+    let tabsContent: any = {
+        NotifyTab: {
+            stack: 'notificationStack',
+            options: () => ({
+                title: 'הודעות',
+                tabBarIcon: getTabBarIcon('NotifyTab'),
+            }),
+        },
+        TasksTab: {
+            stack: 'tasksStack',
+            options: () => ({
+                title: 'משימות',
+                tabBarIcon: getTabBarIcon('TasksTab'),
+            }),
+        },
+        ClockTab: {
+            stack: 'timeClockStack',
+            options: () => ({
+                title: 'שעון נוכחות',
+                tabBarIcon: getTabBarIcon('ClockTab'),
+            }),
+        },
+        AdminTab: {
             stack: 'adminStack',
             options: () => ({
                 title: 'ניהול',
                 tabBarIcon: getTabBarIcon('AdminTab'),
             }),
-        };
-    }
-
+        }
+    };
     return tabsContent;
 };
 
@@ -115,8 +143,11 @@ export const navio = Navio.build({
     tabs: {
         // main 3 tabs
         AppTabs: {
-            content: createTabsContent(isAdmin),
+            content: createTabsContent(),
         },
+        AppAdminTabs: {
+            content: createTabsAdminContent(),
+        }
         /*
         ClockTab: {
                   stack: ['Settings'],
@@ -160,26 +191,6 @@ export const navio = Navio.build({
             },
             drawerPosition: 'left',
         },
-
-        // drawer inside tabs
-        // DrawerForTabs: {
-        //   content: {
-        //     FlashList: {
-        //       stack: ['PlaygroundFlashList'],
-        //       options: {
-        //         title: 'Flash List',
-        //         drawerPosition: 'right',
-        //       },
-        //     },
-        //     ExpoImage: {
-        //       stack: ['PlaygroundExpoImage'],
-        //       options: {
-        //         title: 'Expo Image',
-        //         drawerPosition: 'right',
-        //       },
-        //     },
-        //   },
-        // },
     },
 /*    modals: {
         ExampleModal: 'ExampleStack',

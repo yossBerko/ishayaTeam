@@ -16,7 +16,7 @@ export type Props = {
 
 export const AuthLogin: NavioScreen<Props> = observer(({type = 'push'}) => {
     useAppearance(); // for Dark Mode
-    const {t, navio, api} = useServices();
+    const {t, api, navio} = useServices();
     const {auth} = useStores();
 
     // State
@@ -49,7 +49,11 @@ export const AuthLogin: NavioScreen<Props> = observer(({type = 'push'}) => {
                 // marking that we are logged in
 
                 // navigating to main app
-                navio.setRoot('tabs', 'AppTabs');
+                if (auth.isAdmin == true) {
+                    console.log(auth.isAdmin);
+                    navio.setRoot('tabs', 'AppAdminTabs');
+                }else
+                    navio.setRoot('tabs', 'AppTabs');
             } else {
                 // Handle error
                 // @ts-ignore
@@ -122,7 +126,7 @@ export const AuthLogin: NavioScreen<Props> = observer(({type = 'push'}) => {
                                 </View>
                             </View>
 
-                            <BButton label={loading ? 'מתחבר ...' : 'התחבר'} onPress={login} />
+                            <BButton label={loading ? 'מתחבר ...' : 'התחבר'} onPress={login}/>
 
                         </View>
                     </View>
